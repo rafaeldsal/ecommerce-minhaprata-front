@@ -1,0 +1,326 @@
+:host {
+  display: block;
+}
+
+.product-list-container {
+  animation: contentReveal 0.6s ease-out forwards;
+  opacity: 0;
+  margin-top: 10px;
+}
+
+// ========== SKELETON STYLES ==========
+.product-skeleton-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  animation: skeletonPulse 2s ease-in-out infinite;
+}
+
+.product-skeleton-list {
+  background: var(--card-bg);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  animation: skeletonPulse 2s ease-in-out infinite;
+}
+
+// Animação de pulsação para os skeletons
+@keyframes skeletonPulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+// Customização dos skeletons do PrimeNG
+::ng-deep {
+  .p-skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--color-gray-200) 25%,
+      var(--color-gray-300) 50%,
+      var(--color-gray-200) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// ========== SEUS ESTILOS EXISTENTES ==========
+// HEADER DO PRODUCT LIST
+.product-list-header {
+  background: rgba(34, 166, 179, 0.05);
+  border: 1px solid rgba(34, 166, 179, 0.1);
+  border-radius: var(--border-radius-lg);
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+
+  .display-text {
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+}
+
+// CONTROLES DE ORDENAÇÃO E LAYOUT
+.product-list-controls {
+  background: var(--card-bg);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--border-radius-lg);
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.controls-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.controls-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+// GRID DE PRODUTOS
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 2rem;
+  margin-bottom: 2rem;
+  animation: gridReveal 0.8s ease-out forwards;
+}
+
+// LISTA DE PRODUTOS
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  animation: gridReveal 0.8s ease-out forwards;
+}
+
+// ESTADO VAZIO
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+  color: var(--text-tertiary);
+  text-align: center;
+  grid-column: 1 / -1;
+
+  i {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+}
+
+// PAGINAÇÃO
+.product-list-pagination {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border-primary);
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .pagination-info {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    text-align: center;
+
+    @media (min-width: 640px) {
+      text-align: left;
+    }
+  }
+}
+
+// ANIMAÇÕES
+@keyframes contentReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gridReveal {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+// RESPONSIVIDADE
+@media (min-width: 640px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+// PRIMENG OVERRIDES
+::ng-deep {
+  .p-paginator {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+
+    .p-paginator-element {
+      border-radius: var(--border-radius-base) !important;
+      margin: 0 0.125rem !important;
+      transition: all 0.2s ease !important;
+
+      &:hover {
+        background: var(--color-gray-200) !important;
+        transform: translateY(-1px) !important;
+      }
+
+      &.p-highlight {
+        background: linear-gradient(
+          135deg,
+          var(--color-primary) 0%,
+          var(--color-primary-dark) 100%
+        ) !important;
+        color: white !important;
+      }
+    }
+  }
+
+  .p-selectbutton .p-button.p-highlight {
+    background: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+  }
+
+  .p-selectbutton .p-button {
+    background: var(--card-bg) !important;
+    border-color: var(--border-primary) !important;
+    color: var(--text-primary) !important;
+
+    &:not(.p-disabled):not(.p-highlight):hover {
+      background: var(--color-gray-50) !important;
+      border-color: var(--color-gray-300) !important;
+    }
+  }
+}
+
+// Acessibilidade para skeletons
+@media (prefers-reduced-motion: reduce) {
+  .product-skeleton-card,
+  .product-skeleton-list,
+  ::ng-deep .p-skeleton {
+    animation: none !important;
+  }
+
+  .product-list-container {
+    animation: none !important;
+    opacity: 1;
+  }
+}
+
+.refresh-btn {
+  transition: all 0.3s ease;
+
+  &:not(:disabled):hover {
+    background: rgba(34, 166, 179, 0.1) !important;
+    transform: rotate(90deg);
+  }
+
+  &.refreshing .pi {
+    animation: spin 1s linear infinite;
+  }
+}
+
+// Indicador de refresh no texto
+.display-text {
+  transition: all 0.3s ease;
+
+  // Efeito sutil quando mostra o indicador de refresh
+  &:contains("🔄") {
+    animation: gentlePulse 2s ease-in-out;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes gentlePulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+// Header com destaque quando há refresh recente
+.product-list-header:has(.display-text:contains("🔄")) {
+  background: rgba(34, 166, 179, 0.1) !important;
+  border-color: rgba(34, 166, 179, 0.3) !important;
+  transition: all 0.5s ease;
+}

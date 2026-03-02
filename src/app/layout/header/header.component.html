@@ -1,0 +1,63 @@
+<header class="header" [class.menu-open]="isMobileMenuOpen" [class.scrolled]="isScrolled"
+  [class.scrolling-to-top]="isScrollingToTop">
+  <!-- ✅ Adicione esta classe -->
+  <app-page-container>
+    <div class="header-content">
+      <!-- Seu conteúdo atual permanece igual -->
+
+      <!-- Mobile Menu Button -->
+      <button class="mobile-menu-btn" (click)="toggleMobileMenu()"
+        [attr.aria-label]="isMobileMenuOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação'"
+        [attr.aria-expanded]="isMobileMenuOpen" [attr.aria-controls]="isMobileMenuOpen ? 'mobile-navigation' : null"
+        type="button">
+        <i-lucide [img]="MenuIcon" class="icon"></i-lucide>
+      </button>
+
+      <!-- Logo -->
+      <button class="logo" (click)="onLogoClick()" aria-label="Minha Prata - Voltar para página inicial limpa"
+        type="button">
+        MinhaPrata
+      </button>
+
+      <!-- Desktop Navigation -->
+      <nav class="desktop-nav" aria-label="Navegação principal">
+        @for (category of categories; track trackByCategory($index, category)) {
+        <button class="nav-button" [class.active]="category.slug === activeCategory"
+          (click)="onCategorySelect(category)" [attr.aria-current]="category.slug === activeCategory ? 'page' : null"
+          [attr.aria-label]="'Filtrar produtos por ' + category.name" type="button">
+          <i [class]="category.icon" aria-hidden="true"></i>
+          <span>{{ category.name }}</span>
+        </button>
+        }
+      </nav>
+
+      <!-- User Actions -->
+      <div class="user-actions" aria-label="Ações do usuário">
+        <app-user-auth-icon></app-user-auth-icon>
+        <app-cart-icon></app-cart-icon>
+      </div>
+
+      <!-- Mobile Navigation Overlay -->
+      <div class="mobile-nav-overlay" [class.active]="isMobileMenuOpen" (click)="closeMobileMenu()" tabindex="0"
+        role="button" [attr.aria-label]="isMobileMenuOpen ? 'Fechar menu de navegação' : null"
+        [attr.aria-hidden]="!isMobileMenuOpen">
+        <nav class="mobile-nav" (click)="$event.stopPropagation()" id="mobile-navigation" aria-label="Navegação mobile">
+          <button class="mobile-nav-close" (click)="closeMobileMenu()" aria-label="Fechar menu" type="button">
+            <i-lucide [img]="XIcon" class="icon"></i-lucide>
+          </button>
+
+          <div class="mobile-nav-content">
+            @for (category of categories; track trackByCategory($index, category)) {
+            <button class="mobile-nav-button" [class.active]="category.slug === activeCategory"
+              (click)="onMobileCategorySelect(category)"
+              [attr.aria-current]="category.slug === activeCategory ? 'page' : null" type="button">
+              <i [class]="category.icon" aria-hidden="true"></i>
+              <span>{{ category.name }}</span>
+            </button>
+            }
+          </div>
+        </nav>
+      </div>
+    </div>
+  </app-page-container>
+</header>

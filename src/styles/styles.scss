@@ -1,0 +1,13 @@
+@use "variables";
+@use "base";
+@use "animations";
+@use "prime-ng-overrides";
+@use "utilities";
+@use "components";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "primeicons/primeicons.css";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");

@@ -1,0 +1,72 @@
+:host {
+  display: block;
+}
+
+.cart-btn {
+  @apply relative flex items-center justify-center w-10 h-10 bg-transparent border-none cursor-pointer rounded-lg transition-all duration-300;
+  color: var(--text-secondary);
+  opacity: 0;
+  animation: slideInFromTop 0.5s ease-out forwards;
+  animation-delay: 0.6s;
+
+  .icon {
+    @apply w-5 h-5;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  // Badge - estilo redondo no canto superior direito
+  .cart-badge {
+    @apply absolute -top-1 -right-1 text-white text-xs rounded-full min-w-5 h-5 flex items-center justify-center font-bold;
+    background: var(--color-error);
+    animation: popIn 0.3s ease-out 0.8s forwards;
+    opacity: 0;
+    transform: scale(0);
+    padding: 0 0.25rem;
+    font-size: 0.7rem;
+    line-height: 1;
+    z-index: 10;
+
+    // Para números com 2 dígitos
+    &.double-digit {
+      min-width: 1.5rem;
+      padding: 0 0.4rem;
+    }
+  }
+
+  // Hover exatamente como você quer
+  &:hover {
+    background: var(--color-gray-100);
+    color: var(--color-primary);
+
+    .icon {
+      color: var(--color-primary);
+    }
+  }
+}
+
+// Animações
+@keyframes slideInFromTop {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

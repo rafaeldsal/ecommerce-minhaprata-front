@@ -1,0 +1,6 @@
+<button class="cart-btn" [routerLink]="['/cart']">
+  <i class="pi pi-shopping-cart icon"></i>
+  @if (cartItemsCount() > 0) {
+  <span [class]="badgeClass()"> {{ cartItemsCount() }}</span>
+  }
+</button>

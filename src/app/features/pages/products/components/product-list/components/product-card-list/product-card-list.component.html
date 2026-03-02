@@ -1,0 +1,74 @@
+<div
+  class="product-card-list cursor-pointer border-1 surface-border border-round surface-card transition-all transition-duration-300 hover:shadow-2 focus:shadow-2 outline-none"
+  (click)="onCardClick()" (keydown.enter)="onCardClick()" (keydown.space)="onCardClick()" tabindex="0" role="button"
+  [attr.aria-label]="'Ver detalhes do produto ' + (product()?.name || '')">
+
+  <div class="product-list-content flex gap-4">
+
+    <!-- Imagem Limpa -->
+    <div class="product-list-img">
+      <img [src]="getProductImage(product())" [alt]="'Produto: ' + (product()?.name || '')"
+        class="product-image w-full h-full rounded border-round object-cover">
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="product-list-main flex-1 flex flex-col min-w-0">
+
+      <!-- Cabeçalho com Tag Reposicionada -->
+      <div class="product-list-header">
+        <div class="status-tag-container">
+          <p-tag [value]="product()?.inStock ? 'Em Estoque' : 'Esgotado'"
+            [severity]="product()?.inStock ? 'success' : 'danger'">
+          </p-tag>
+        </div>
+
+        <h3 class="product-name text-lg font-medium text-surface-900 line-clamp-1">
+          {{ product()?.name }}
+        </h3>
+
+        <div class="product-category text-xs font-medium text-primary-500">
+          {{ product()?.category?.name }}
+        </div>
+      </div>
+
+      <!-- Descrição -->
+      <p class="product-description text-surface-500 text-sm line-clamp-2">
+        {{ product()?.description }}
+      </p>
+
+      <!-- Opções -->
+      <ng-container *ngIf="product()?.options as options">
+        <div class="product-options-preview" *ngIf="options.length > 0">
+          <div class="option-tags flex flex-wrap gap-1">
+            <p-tag *ngFor="let option of options" [value]="option.name + ': ' + option.values.length + ' opções'"
+              severity="secondary" styleClass="text-xs">
+            </p-tag>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Sidebar - Preço e Ações -->
+    <div class="product-list-sidebar flex flex-col items-end gap-3">
+
+      <!-- Preço -->
+      <div class="product-price text-2xl font-semibold text-surface-900">
+        R$ {{ product()?.price?.toFixed(2) }}
+      </div>
+
+      <!-- Ações -->
+      <div class="product-actions flex gap-2">
+
+        <!-- Botão Detalhes -->
+        <button pButton label="Detalhes" icon="pi pi-eye" class="p-button-outlined p-button-sm"
+          (click)="onViewDetails($event)" [attr.aria-label]="'Ver detalhes de ' + (product()?.name || '')">
+        </button>
+
+        <!-- Botão Carrinho -->
+        <button pButton icon="pi pi-shopping-cart" class="p-button-sm" [disabled]="!product()?.inStock"
+          (click)="onAddToCart($event)" [attr.aria-label]="'Adicionar ' + (product()?.name || '') + ' ao carrinho'">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<div class="not-found-container">
+  <div class="not-found-content">
+
+    <!-- Ilustração/Ícone -->
+    <div class="not-found-illustration">
+      <i class="pi pi-map text-6xl text-primary-500"></i>
+    </div>
+
+    <!-- Título e Mensagem -->
+    <div class="not-found-text text-center">
+      <h1 class="not-found-title">Página Não Encontrada</h1>
+      <p class="not-found-description">
+        Ops! A página que você está procurando não existe ou foi movida.
+      </p>
+    </div>
+
+    <!-- Ações -->
+    <div class="not-found-actions flex flex-col sm:flex-row gap-4">
+
+      <!-- Voltar para página anterior -->
+      <button pButton label="Voltar para Página Anterior" icon="pi pi-arrow-left" class="p-button-outlined p-button-lg"
+        (click)="goBack()">
+      </button>
+
+      <!-- Ir para Home (limpa tudo) -->
+      <button pButton label="Ir para Página Inicial" icon="pi pi-home" class="p-button-primary p-button-lg"
+        (click)="goHome()">
+      </button>
+    </div>
+
+    <!-- Informação adicional -->
+    <div class="not-found-info text-center text-surface-500 text-sm mt-6">
+      <p>
+        <strong>Atenção:</strong> Ao ir para a página inicial, todos os filtros e buscas serão limpos.
+      </p>
+    </div>
+  </div>
+</div>

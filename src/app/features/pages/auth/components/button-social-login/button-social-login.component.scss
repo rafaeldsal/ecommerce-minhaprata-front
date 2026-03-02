@@ -1,0 +1,89 @@
+:host {
+  display: block;
+}
+
+.social-login-buttons {
+  .social-btn {
+    border-radius: var(--border-radius-lg);
+    font-family: var(--font-family-primary);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    &:not(:disabled):hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    &.google-btn {
+      // Forçar cores específicas para o botão do Google
+      background: #ffffff !important;
+      border: 2px solid #dadce0 !important;
+      color: #3c4043 !important;
+
+      &:not(:disabled):hover {
+        background: #f8f9fa !important;
+        border-color: #dadce0 !important;
+      }
+
+      .google-icon {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn-text {
+        color: #3c4043 !important;
+        font-weight: var(--font-weight-medium);
+        transition: opacity 0.2s ease;
+      }
+    }
+
+    .btn-content {
+      transition: opacity 0.2s ease;
+    }
+
+    // Efeito de loading
+    &:disabled .btn-content {
+      opacity: 0.7;
+    }
+  }
+}
+
+.google-button-container {
+  margin: var(--space-3) 0;
+}
+
+// Estados de foco para acessibilidade
+.social-btn:focus {
+  outline: none;
+
+  &.google-btn {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
+  }
+}
+
+// Remova completamente o bloco ::ng-deep ou simplifique-o
+::ng-deep {
+  .google-btn {
+    .p-progressspinner {
+      position: absolute !important;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+
+      circle {
+        stroke: #3c4043 !important;
+      }
+    }
+  }
+}

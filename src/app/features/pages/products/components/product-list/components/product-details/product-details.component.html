@@ -1,0 +1,344 @@
+<div class="min-h-screen bg-gray-50 py-8 animate-fadeIn">
+  @if (loading()) {
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
+      <div class="bg-white rounded-2xl shadow-sm p-6">
+        <div class="space-y-4">
+          <p-skeleton width="100%" height="400px" class="rounded-lg"></p-skeleton>
+          <div class="flex justify-center gap-2">
+            @for (item of [1,2,3]; track item) {
+            <p-skeleton width="64px" height="64px" class="rounded-md"></p-skeleton>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm p-6 lg:p-8 space-y-6">
+        <p-skeleton width="100px" height="28px"></p-skeleton>
+        <p-skeleton width="80%" height="40px"></p-skeleton>
+        <p-skeleton width="120px" height="48px"></p-skeleton>
+        <p-skeleton width="100%" height="80px"></p-skeleton>
+
+        <div class="space-y-4">
+          <p-skeleton width="100px" height="24px"></p-skeleton>
+          <div class="flex gap-2">
+            @for (item of [1,2]; track item) {
+            <p-skeleton width="80px" height="36px" class="rounded-full"></p-skeleton>
+            }
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <p-skeleton width="100%" height="52px" class="rounded-lg"></p-skeleton>
+          <p-skeleton width="100%" height="44px" class="rounded-lg"></p-skeleton>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  @if (!loading() && product(); as product) {
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="flex items-center space-x-2 text-sm text-gray-500 mb-8 animate-slideInFromTop">
+      <a routerLink="/" class="hover:text-primary-600 transition-colors duration-200">Home</a>
+      <i class="pi pi-chevron-right text-xs"></i>
+      <a [routerLink]="['/category', product.category.id]"
+        class="hover:text-primary-600 transition-colors duration-200">
+        {{ product.category.name }}
+      </a>
+      <i class="pi pi-chevron-right text-xs"></i>
+      <span class="text-gray-900 font-medium truncate">{{ product.name }}</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
+      <div class="bg-white rounded-2xl shadow-sm p-6 animate-popIn">
+        @if (productImages().length > 0) {
+        <div class="space-y-4">
+          <!-- Imagem Principal -->
+          <div
+            class="relative flex items-center justify-center h-96 lg:h-[500px] bg-gray-100 rounded-lg overflow-hidden cursor-zoom-in"
+            (click)="openZoomModal()">
+            <img [src]="currentImage()" [alt]="product.name"
+              class="max-w-full max-h-full object-contain rounded-lg transition-transform duration-300 hover:scale-105"
+              (error)="handleImageError($event)" />
+
+            <!-- Overlay de Zoom -->
+            <div
+              class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center pointer-events-none">
+              <div
+                class="bg-white bg-opacity-90 rounded-full p-3 transform scale-0 group-hover:scale-100 transition-transform duration-300 pointer-events-auto">
+                <i class="pi pi-search-plus text-xl text-gray-700"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Thumbnails -->
+          @if (productImages().length > 1) {
+          <div class="flex justify-center gap-3">
+            @for (image of productImages(); track image; let i = $index) {
+            <button (click)="selectImage(i)" class="transition-all duration-200"
+              [class.ring-2]="currentImageIndex() === i" [class.ring-primary-500]="currentImageIndex() === i"
+              [class.ring-transparent]="currentImageIndex() !== i">
+              <div class="w-16 h-16 rounded-md border-2 overflow-hidden transition-all duration-200"
+                [class.border-primary-500]="currentImageIndex() === i"
+                [class.border-gray-200]="currentImageIndex() !== i"
+                [class.hover:border-primary-300]="currentImageIndex() !== i">
+                <img [src]="image" [alt]="product.name + ' ' + (i + 1)" class="w-full h-full object-cover"
+                  (error)="handleImageError($event)" />
+              </div>
+            </button>
+            }
+          </div>
+          }
+        </div>
+        } @else {
+        <div class="w-full h-96 lg:h-[500px] bg-gray-100 rounded-xl flex flex-col items-center justify-center">
+          <i class="pi pi-image text-6xl text-gray-300 mb-4"></i>
+          <p class="text-gray-500 text-lg">Imagem não disponível</p>
+        </div>
+        }
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm p-6 lg:p-8 animate-popIn delay-100">
+        <div class="mb-4">
+          <p-tag [value]="product.category.name" severity="info" [styleClass]="'px-3 py-1 text-sm font-medium'">
+          </p-tag>
+        </div>
+
+        <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+          {{ product.name }}
+        </h1>
+
+        <div class="flex items-baseline gap-2 mb-6">
+          <span class="text-4xl lg:text-5xl font-bold text-primary-600">
+            R$ {{ product.price.toFixed(2) }}
+          </span>
+        </div>
+
+        <div class="mb-8">
+          <p class="text-lg text-gray-600 leading-relaxed">
+            {{ product.description }}
+          </p>
+        </div>
+
+        @if (hasProductOptions()) {
+        <div class="space-y-6 mb-8">
+          @for (option of product.options; track option.name) {
+          <div class="space-y-3">
+            <label class="block text-sm font-semibold text-gray-900">
+              {{ option.name }}:
+            </label>
+            <div class="flex flex-wrap gap-2">
+              @for (value of option.values; track value) {
+              <p-button [label]="value" [outlined]="!isOptionSelected(option.name, value)"
+                [severity]="isOptionSelected(option.name, value) ? 'primary' : 'secondary'"
+                (onClick)="selectOption(option.name, value)" [styleClass]="'text-sm font-medium'">
+              </p-button>
+              }
+            </div>
+          </div>
+          }
+        </div>
+        }
+
+        <div class="mb-6">
+          @if (isProductInStock()) {
+          <div class="flex items-center gap-2 text-success-600">
+            <i class="pi pi-check-circle text-lg"></i>
+            <span class="font-semibold">Em estoque</span>
+            @if (product.stockQuantity && product.stockQuantity > 0) {
+            <span class="text-gray-500">• {{ product.stockQuantity }} unidades</span>
+            }
+          </div>
+          } @else {
+          <div class="flex items-center gap-2 text-error-600">
+            <i class="pi pi-times-circle text-lg"></i>
+            <span class="font-semibold">Fora de estoque</span>
+          </div>
+          }
+        </div>
+
+        @if (isProductInStock()) {
+        <div class="flex items-center gap-4 mb-8">
+          <span class="text-sm font-semibold text-gray-900">Quantidade:</span>
+          <div class="flex items-center gap-3 border border-gray-200 rounded-lg px-3 py-2">
+            <button (click)="decreaseQuantity()" [disabled]="quantity() <= 1"
+              class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+              <i class="pi pi-minus text-sm"></i>
+            </button>
+            <span class="w-12 text-center font-semibold text-lg">{{ quantity() }}</span>
+            <button (click)="increaseQuantity()" [disabled]="quantity() >= (product.stockQuantity || 1)"
+              class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+              <i class="pi pi-plus text-sm"></i>
+            </button>
+          </div>
+        </div>
+        }
+
+        <div class="space-y-4 mb-8">
+          <p-button [label]="isProductInStock() ? 'Adicionar ao Carrinho' : 'Fora de Estoque'"
+            icon="pi pi-shopping-cart" [disabled]="!isProductInStock() || !areAllOptionsSelected()"
+            (onClick)="addToCart()"
+            [styleClass]="'w-full text-lg py-4 font-semibold shadow-sm hover:shadow-md transition-all duration-300 mb-2'">
+          </p-button>
+
+          <p-button label="Voltar para Loja" icon="pi pi-arrow-left" severity="secondary" (onClick)="goBack()"
+            [styleClass]="'w-full py-3 bg-transparent border border-gray-300 text-gray-600 hover:bg-gray-50 hover:text-gray-700 hover:border-gray-400 transition-all duration-300 mt-2'">
+          </p-button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 pt-6 border-t border-gray-100">
+          <div class="flex items-center gap-3 text-sm">
+            <i class="pi pi-truck text-primary-600"></i>
+            <div>
+              <div class="font-semibold">Frete Grátis</div>
+              <div class="text-gray-500 text-xs">Acima de R$ 100</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <i class="pi pi-shield text-primary-600"></i>
+            <div>
+              <div class="font-semibold">Garantia</div>
+              <div class="text-gray-500 text-xs">1 ano</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <i class="pi pi-verified text-primary-600"></i>
+            <div>
+              <div class="font-semibold">Qualidade</div>
+              <div class="text-gray-500 text-xs">Prata 925</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <i class="pi pi-sync text-primary-600"></i>
+            <div>
+              <div class="font-semibold">Troca Fácil</div>
+              <div class="text-gray-500 text-xs">30 dias</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="mb-16 animate-fadeIn delay-200">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Por que escolher nossas joias?</h2>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">Qualidade excepcional e atendimento dedicado para sua
+          experiência única</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <p-card [styleClass]="'h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-0'">
+          <ng-template pTemplate="header">
+            <div class="flex justify-center mb-4">
+              <div class="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center">
+                <i class="pi pi-star-fill text-2xl text-primary-600"></i>
+              </div>
+            </div>
+          </ng-template>
+          <h3 class="text-xl font-bold text-gray-900 text-center mb-3">Alta Qualidade</h3>
+          <p class="text-gray-600 text-center leading-relaxed">
+            Joias em prata 925 com acabamento impecável e duradouro, garantindo brilho e resistência.
+          </p>
+        </p-card>
+
+        <p-card [styleClass]="'h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-0'">
+          <ng-template pTemplate="header">
+            <div class="flex justify-center mb-4">
+              <div class="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center">
+                <i class="pi pi-gift text-2xl text-primary-600"></i>
+              </div>
+            </div>
+          </ng-template>
+          <h3 class="text-xl font-bold text-gray-900 text-center mb-3">Embalagem Presente</h3>
+          <p class="text-gray-600 text-center leading-relaxed">
+            Embalagem especial para presente, perfeita para ocasiões especiais e momentos memoráveis.
+          </p>
+        </p-card>
+
+        <p-card [styleClass]="'h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-0'">
+          <ng-template pTemplate="header">
+            <div class="flex justify-center mb-4">
+              <div class="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center">
+                <i class="pi pi-lock text-2xl text-primary-600"></i>
+              </div>
+            </div>
+          </ng-template>
+          <h3 class="text-xl font-bold text-gray-900 text-center mb-3">Compra Segura</h3>
+          <p class="text-gray-600 text-center leading-relaxed">
+            Site seguro e processamento de pagamento criptografado para sua tranquilidade.
+          </p>
+        </p-card>
+
+        <p-card [styleClass]="'h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-0'">
+          <ng-template pTemplate="header">
+            <div class="flex justify-center mb-4">
+              <div class="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center">
+                <i class="pi pi-headphones text-2xl text-primary-600"></i>
+              </div>
+            </div>
+          </ng-template>
+          <h3 class="text-xl font-bold text-gray-900 text-center mb-3">Suporte Dedicado</h3>
+          <p class="text-gray-600 text-center leading-relaxed">
+            Equipe de suporte especializada para tirar todas suas dúvidas e oferecer assistência personalizada.
+          </p>
+        </p-card>
+      </div>
+    </section>
+  </div>
+  }
+
+  @if (showZoomModal()) {
+  <div class="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4 animate-fadeIn"
+    (click)="closeZoomModal()">
+    <div class="relative max-w-7xl max-h-full w-full h-full flex items-center justify-center">
+      <!-- Imagem Ampliada -->
+      <img [src]="currentImage()" [alt]="product()?.name" class="max-w-full max-h-full object-contain rounded-lg"
+        (click)="$event.stopPropagation()" />
+
+      <!-- Botão Fechar -->
+      <button (click)="closeZoomModal()"
+        class="absolute top-4 right-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white rounded-full p-3 transition-all duration-300 hover:scale-110 backdrop-blur-sm">
+        <i class="pi pi-times text-xl"></i>
+      </button>
+
+      <!-- Navegação entre Imagens -->
+      @if (canShowImageNavigation()) {
+      <div
+        class="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white rounded-full px-4 py-2 flex items-center gap-4 backdrop-blur-sm">
+        <button (click)="previousImage(); $event.stopPropagation()" [disabled]="currentImageIndex() === 0"
+          class="hover:text-primary-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+          <i class="pi pi-chevron-left"></i>
+        </button>
+
+        <span class="text-sm font-medium">
+          {{ currentImageIndex() + 1 }} / {{ productImagesLength() }}
+        </span>
+
+        <button (click)="nextImage(); $event.stopPropagation()"
+          [disabled]="currentImageIndex() === productImagesLength() - 1"
+          class="hover:text-primary-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+          <i class="pi pi-chevron-right"></i>
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+  }
+
+  @if (!loading() && !product()) {
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col items-center justify-center min-h-[60vh] text-center animate-fadeIn">
+      <div class="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+        <i class="pi pi-inbox text-5xl text-gray-400"></i>
+      </div>
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Produto não encontrado</h2>
+      <p class="text-xl text-gray-600 mb-8 max-w-md">
+        O produto que você está procurando não existe ou foi removido.
+      </p>
+      <p-button label="Voltar para Home" icon="pi pi-home" routerLink="/" [styleClass]="'px-6 py-3'">
+      </p-button>
+    </div>
+  </div>
+  }
+</div>

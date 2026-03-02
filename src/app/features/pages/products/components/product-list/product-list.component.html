@@ -1,0 +1,70 @@
+<!-- CONTEÚDO REAL -->
+<div class="product-list-container">
+
+  <!-- HEADER COM INFO DOS PRODUTOS -->
+  <div class="product-list-header">
+    <div class="flex items-center gap-3">
+      <p class="display-text">{{ displayText() }}</p>
+
+      <!-- ✅ BOTÃO DE REFRESH MANUAL -->
+      <button *ngIf="!isSearching()" pButton icon="pi pi-refresh"
+        class="p-button-rounded p-button-text p-button-sm refresh-btn" (click)="refreshProducts()"
+        [disabled]="loading()" pTooltip="Atualizar produtos" tooltipPosition="top" [class.refreshing]="loading()">
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTROLES -->
+  <div class="product-list-controls">
+    <div class="controls-left">
+      <p-select [options]="sortOptionsForSelect()" [(ngModel)]="sortKey" placeholder="Ordenar por"
+        (onChange)="onSortChange($event)" class="w-full md:w-64"></p-select>
+    </div>
+
+    <div class="controls-right">
+      <p-selectButton [options]="layoutOptions()" [(ngModel)]="layout" [allowEmpty]="false">
+        <ng-template let-option pTemplate="item">
+          <i class="pi" [ngClass]="option.icon"></i>
+        </ng-template>
+      </p-selectButton>
+    </div>
+  </div>
+
+  <!-- GRID DE PRODUTOS -->
+  @if (layout() === 'grid') {
+  <div class="product-grid">
+    @for (product of displayedProducts(); track product.id) {
+    <app-product-card-grid [product]="product" (productClick)="onProductClick($event)"></app-product-card-grid>
+    } @empty {
+    <div class="empty-state">
+      <i class="pi pi-inbox text-4xl mb-2"></i>
+      <p>Nenhum produto encontrado</p>
+    </div>
+    }
+  </div>
+  } @else {
+  <div class="product-list">
+    @for (product of displayedProducts(); track product.id) {
+    <app-product-card-list [product]="product" (productClick)="onProductClick($event)"></app-product-card-list>
+    } @empty {
+    <div class="empty-state">
+      <i class="pi pi-inbox text-4xl mb-2"></i>
+      <p>Nenhum produto encontrado</p>
+    </div>
+    }
+  </div>
+  }
+
+  <!-- PAGINAÇÃO -->
+  @if (totalRecords() > rowsPerPage()) {
+  <div class="product-list-pagination">
+    <div class="pagination-info">
+      Página {{ currentPage() + 1 }} de {{ totalPages() }}
+    </div>
+
+    <p-paginator [first]="currentPage() * rowsPerPage()" [rows]="rowsPerPage()" [totalRecords]="totalRecords()"
+      [rowsPerPageOptions]="[9, 15, 30]" (onPageChange)="onPageChange($event)" styleClass="border-0">
+    </p-paginator>
+  </div>
+  }
+</div>

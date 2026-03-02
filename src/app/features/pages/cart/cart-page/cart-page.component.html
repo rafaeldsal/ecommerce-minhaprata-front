@@ -1,0 +1,167 @@
+<app-page-container>
+  <div class="cart-container">
+    <!-- Header -->
+    <div class="cart-header">
+      <div class="header-content">
+        <h1>Meu Carrinho</h1>
+        <p class="cart-subtitle">
+          {{ totalItems() }} {{ totalItems() === 1 ? 'item' : 'itens' }} no carrinho
+        </p>
+      </div>
+
+      <p-button label="Continuar Comprando" icon="pi pi-arrow-left" (onClick)="continueShopping()"
+        styleClass="continue-shopping-btn">
+      </p-button>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading()) {
+    <div class="loading-container">
+      <div class="skeleton-grid">
+        <!-- Skeleton Items -->
+        <div class="skeleton-items">
+          @for (item of skeletonItems; track $index) {
+          <div class="skeleton-item">
+            <div class="flex items-center gap-4 p-4">
+              <p-skeleton size="4rem" class="rounded-xl"></p-skeleton>
+              <div class="flex-1 space-y-2">
+                <p-skeleton width="70%"></p-skeleton>
+                <p-skeleton width="40%"></p-skeleton>
+                <p-skeleton width="30%"></p-skeleton>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+
+        <!-- Skeleton Summary -->
+        <div class="skeleton-summary">
+          <p-skeleton width="100%" height="200px" class="rounded-2xl"></p-skeleton>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- Cart Empty State -->
+    @if (!loading() && isCartEmpty()) {
+    <div class="empty-cart">
+      <div class="empty-icon-container">
+        <div class="empty-icon-gradient">
+          <i class="pi pi-shopping-cart"></i>
+        </div>
+      </div>
+
+      <h2>Seu carrinho está vazio</h2>
+      <p class="empty-description">
+        Explore nossa coleção de produtos incríveis e adicione itens ao seu carrinho para começar.
+      </p>
+
+      <p-button label="Explorar Produtos" icon="pi pi-shopping-bag" (onClick)="continueShopping()"
+        styleClass="explore-products-btn">
+      </p-button>
+    </div>
+    }
+
+    <!-- Cart with Items -->
+    @if (!loading() && !isCartEmpty()) {
+    <div class="cart-content">
+      <div class="cart-grid">
+
+        <!-- Items Section -->
+        <div class="items-section">
+          <div class="items-container">
+            <!-- Desktop Header -->
+            <div class="desktop-header">
+              <div class="header-product">Produto</div>
+              <div class="header-quantity">Quantidade</div>
+              <div class="header-price">Preço</div>
+              <div class="header-total">Total</div>
+              <div class="header-actions"></div>
+            </div>
+
+            <!-- Cart Items -->
+            <div class="items-list">
+              @for (item of cartState().items; track getItemTrackBy($index, item)) {
+              <app-cart-item [item]="item" (quantityChange)="onQuantityChange(item, $event)"
+                (remove)="onRemoveItem(item)">
+              </app-cart-item>
+              }
+            </div>
+
+            <!-- Cart Actions -->
+            <div class="cart-actions-left">
+              <p-button label="Limpar Carrinho" icon="pi pi-trash" severity="danger" (onClick)="clearCart()"
+                styleClass="clear-cart-btn">
+              </p-button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="summary-section">
+          <div class="summary-card">
+            <h3 class="summary-title">Resumo do Pedido</h3>
+
+            <!-- Summary Items -->
+            <div class="summary-items">
+              <div class="summary-row">
+                <span class="summary-label">Subtotal</span>
+                <span class="summary-value">R$ {{ totalPrice().toFixed(2) }}</span>
+              </div>
+
+              <div class="summary-row">
+                <span class="summary-label">Frete</span>
+                <span class="summary-value free">Grátis</span>
+              </div>
+
+              <div class="summary-row discount">
+                <span class="summary-label">Descontos</span>
+                <span class="summary-value">R$ 0,00</span>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="summary-divider"></div>
+
+            <!-- Total -->
+            <div class="summary-total">
+              <span class="total-label">Total</span>
+              <span class="total-value">R$ {{ totalPrice().toFixed(2) }}</span>
+            </div>
+
+            <!-- Checkout Button -->
+            <p-button label="Finalizar Compra" icon="pi pi-check" (onClick)="proceedToCheckout()"
+              styleClass="checkout-btn">
+            </p-button>
+
+            <!-- Security Info -->
+            <div class="security-info">
+              <div class="security-badge">
+                <i class="pi pi-lock"></i>
+                <span>Compra 100% segura</span>
+              </div>
+              <p class="security-description">Pagamento processado com segurança</p>
+            </div>
+
+            <!-- Benefits -->
+            <div class="benefits">
+              <div class="benefit-item">
+                <i class="pi pi-truck"></i>
+                <span>Entrega grátis para todo Brasil</span>
+              </div>
+              <div class="benefit-item">
+                <i class="pi pi-sync"></i>
+                <span>Devolução em 30 dias</span>
+              </div>
+              <div class="benefit-item">
+                <i class="pi pi-headphones"></i>
+                <span>Suporte 24/7</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</app-page-container>

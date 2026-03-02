@@ -1,0 +1,130 @@
+<section class="search-section" aria-label="Busca de produtos">
+  <div class="search-container">
+    <div class="search-box relative">
+      <div class="relative">
+        <p-floatlabel variant="in">
+          <p-iconfield>
+            <p-inputicon class="pi pi-search" />
+            <input pInputText id="search_input" [(ngModel)]="searchTerm" autocomplete="off"
+              (input)="onSearchInput($event)" (focus)="onInputFocus()" (blur)="onBlur()" (keydown)="onKeydown($event)"
+              #searchInput aria-describedby="search-help">
+
+            @if(isLoading) {
+            <p-inputicon class="pi pi-spinner pi-spin" />
+            }
+          </p-iconfield>
+          <label for="search_input">Buscar produtos</label>
+        </p-floatlabel>
+
+        <!-- Clear Button -->
+        @if (searchTerm && !isLoading) {
+        <button (click)="clearSearch()"
+          class="absolute inset-y-0 right-0 flex items-center pr-3 z-20 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+          aria-label="Limpar busca" type="button">
+          <i-lucide [img]="XIcon" class="w-5 h-5"></i-lucide>
+        </button>
+        }
+      </div>
+
+      <!-- Result Dropdown -->
+      @if (showResults && filteredProducts.length > 0) {
+      <div
+        class="search-results absolute top-full left-0 right-0 z-50 mt-3 bg-white rounded-2xl shadow-2xl border border-gray-200 max-h-96 overflow-y-auto"
+        role="listbox" aria-label="Resultados da busca" id="search-results" [attr.aria-expanded]="showResults">
+        @for (product of filteredProducts; track product; let i = $index) {
+        <div
+          class="result-item group p-4 border-b border-gray-100 last:border-b-0 cursor-pointer transition-all duration-200 hover:bg-gray-50 active:bg-gray-100"
+          (mousedown)="selectProduct(product)" (click)="selectProduct(product)" (keydown.enter)="selectProduct(product)"
+          (keydown.space)="selectProduct(product)" tabindex="0" role="option" [attr.aria-selected]="i === 0"
+          [attr.aria-posinset]="i + 1" [attr.aria-setsize]="filteredProducts.length"
+          [attr.aria-label]="getProductAriaLabel(product)">
+          <div class="flex items-center gap-4">
+            <!-- Product Image -->
+            <div
+              class="product-image flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
+              <img [src]="getProductImage(product)" [alt]="'Imagem do produto ' + product.name" loading="lazy"
+                class="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105">
+            </div>
+            <!-- Product Info -->
+            <div class="product-info flex-1 min-w-0">
+              <h4 class="text-base font-semibold text-gray-900 truncate mb-1">
+                {{ product.name }}
+              </h4>
+              <div class="flex items-center gap-3 mb-2">
+                <span
+                  class="product-category text-xs font-medium text-primary uppercase tracking-wide px-2 py-1 bg-primary-light bg-opacity-10 rounded-full">
+                  {{ product.category.name || 'Categoria' }}
+                </span>
+                <span class="product-price text-lg font-bold text-gray-800">
+                  R$ {{ product.price.toFixed(2) }}
+                </span>
+              </div>
+              <!-- Stock quantity -->
+              @if (product.stockQuantity !== undefined) {
+              <div class="flex-items-center gap-2">
+                <div class="w-2 h-2 rounded-full" [class.bg-green-500]="product.stockQuantity > 0"
+                  [class.bg-red-500]="product.stockQuantity === 0">
+                </div>
+                <span class="text-xs font-medium" [class.text-green-600]="product.stockQuantity > 0"
+                  [class.text-red-600]="product.stockQuantity === 0">
+                  {{ product.stockQuantity > 0 ? 'Em estoque' : 'Fora de estoque' }}
+                </span>
+              </div>
+              }
+            </div>
+            <!-- Quick Action -->
+            <div class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                <i-lucide [img]="ArrowRightIcon" class="text-white my-icon"></i-lucide>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+        <!-- View All Results -->
+        @if (filteredProducts.length >= 5) {
+        <div class="p-4 bg-gray-50 border-t border-gray-200 rounded-b-2xl">
+          <button class="w-full text-center text-primary font-semibold hover:text-primary-dark transition-colors"
+            (click)="viewAllResults()">
+            Ver todos os {{ filteredProducts.length }} resultados
+          </button>
+        </div>
+        }
+      </div>
+      }
+
+      <!-- No Results -->
+      @if (showResults && filteredProducts.length === 0 && searchTerm.length >= 3) {
+      <div
+        class="search-no-results absolute top-full left-0 right-0 z-50 mt-3 bg-white rounded-2xl shadow-2xl border border-gray-200 p-8 text-center"
+        role="status" aria-live="polite">
+        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i-lucide [img]="SearchX"></i-lucide>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">
+          Nenhum produto encontrado
+        </h3>
+        <p class="text-gray-600 mb-6">
+          Não encontramos resultados para <strong>"{{ searchTerm }}"</strong>
+        </p>
+        <div class="search-suggestions">
+          <p class="text-sm text-gray-500 mb-3">Tente buscar por:</p>
+          <div class="flex-flex-wrap gap-2 justify-center">
+            @for (suggestion of searchSuggestions; track suggestion) {
+            <span
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium cursor-pointer hover:bg-gray-200 hover:text-gray-900 transition-all duration-200"
+              (click)="applySuggestion(suggestion)">
+              {{ suggestion }}
+            </span>
+            }
+          </div>
+        </div>
+      </div>
+      }
+
+      <div id="search-help" class="sr-only">
+        Digite pelo menos 3 caracteres para buscar produtos. Use as setas para navegar e Enter para selecionar.
+      </div>
+    </div>
+  </div>
+</section>

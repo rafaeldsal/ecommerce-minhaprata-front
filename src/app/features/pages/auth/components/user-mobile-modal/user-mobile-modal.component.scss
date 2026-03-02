@@ -1,0 +1,279 @@
+// user-mobile-modal.component.scss - VERSÃO CORRIGIDA
+:host {
+  display: block;
+}
+
+.mobile-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: overlayFadeIn 0.2s ease-out;
+  pointer-events: auto; // ✅ CORRIGIDO
+
+  @media (min-width: 769px) {
+    display: none !important;
+  }
+}
+
+.mobile-modal-content {
+  position: relative;
+  background: white;
+  width: 100%;
+  max-width: 100vw; // ✅ GARANTIR que não ultrapasse a tela
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+  pointer-events: auto; // ✅ CORRIGIDO
+  box-sizing: border-box;
+
+  // Scroll suave para iOS
+  -webkit-overflow-scrolling: touch;
+
+  .drag-indicator {
+    width: 40px;
+    height: 4px;
+    border-radius: 4px;
+    background: #d1d5db;
+    margin: 12px auto 8px;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1rem 0.75rem;
+    background: white;
+    border-bottom: 1px solid #f3f4f6;
+
+    .user-info-mobile {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex: 1;
+
+      .user-avatar.medium {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: #f3f4f6;
+
+        .avatar-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .avatar-placeholder {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.875rem;
+          font-weight: bold;
+          background: linear-gradient(
+            135deg,
+            var(--color-primary),
+            var(--color-primary-dark)
+          );
+          color: white;
+        }
+      }
+
+      .user-details-mobile {
+        flex: 1;
+        min-width: 0;
+
+        .user-fullname {
+          display: block;
+          font-size: 1rem;
+          font-weight: 600;
+          color: #1f2937;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .user-email {
+          display: block;
+          font-size: 0.875rem;
+          color: #6b7280;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          margin-top: 0.25rem;
+        }
+      }
+    }
+
+    .modal-close-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #f3f4f6;
+      color: #6b7280;
+      border: none;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #e5e7eb;
+        color: #374151;
+      }
+
+      &:focus {
+        outline: 2px solid var(--color-primary-light);
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  .dropdown-divider {
+    height: 1px;
+    background: #f3f4f6;
+    margin: 0;
+  }
+
+  .modal-nav {
+    padding: 0.5rem;
+    background: white;
+
+    .modal-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.75rem 0.75rem;
+      font-size: 0.875rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s ease;
+      margin-bottom: 0.25rem;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      min-height: 52px;
+      box-sizing: border-box;
+      background: transparent;
+
+      &:active {
+        background: #f3f4f6;
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+      }
+
+      &:hover {
+        background: #f9fafb;
+      }
+
+      i:first-child {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+      }
+
+      span {
+        flex: 1;
+        color: #374151;
+        font-weight: 500;
+        text-align: left;
+      }
+
+      .item-badge-container {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .order-badge {
+          padding: 0.25rem 0.5rem;
+          font-size: 0.75rem;
+          background: #fef2f2;
+          color: #dc2626;
+          border-radius: 9999px;
+          font-weight: 500;
+        }
+
+        i {
+          color: #9ca3af;
+          font-size: 0.875rem;
+        }
+      }
+
+      i:last-child:not(.pi-sign-out) {
+        color: #9ca3af;
+        font-size: 0.875rem;
+      }
+
+      &.logout-btn {
+        color: #dc2626;
+
+        &:hover {
+          background: #fef2f2;
+        }
+
+        i:first-child {
+          color: #dc2626;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+/* Animações */
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0.6;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-modal-overlay,
+  .mobile-modal-content {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Melhorar área de toque em mobile */
+@media (max-width: 768px) {
+  .modal-item {
+    min-height: 56px !important;
+  }
+}

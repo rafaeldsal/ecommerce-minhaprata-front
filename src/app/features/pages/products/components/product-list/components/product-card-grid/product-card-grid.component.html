@@ -1,0 +1,71 @@
+<div
+  class="product-card cursor-pointer border-1 surface-border border-round surface-card transition-all transition-duration-300 hover:shadow-2 focus:shadow-2 outline-none"
+  (click)="onCardClick()" (keydown.enter)="onCardClick()" (keydown.space)="onCardClick()" tabindex="0" role="button"
+  [attr.aria-label]="'Ver detalhes do produto ' + (product()?.name || '')">
+
+  <!-- Imagem ocupando toda a largura -->
+  <div class="product-img relative">
+    <!-- Imagem real ou placeholder -->
+    <div *ngIf="!shouldShowPlaceholder()" class="real-image-container">
+      <img [src]="getProductImage(product())" [alt]="'Produto: ' + (product()?.name || '')" class="product-image w-full"
+        (error)="handleImageError($event)" loading="lazy">
+    </div>
+
+    <!-- Placeholder -->
+    <div *ngIf="shouldShowPlaceholder()" class="placeholder-container">
+      <img [src]="getProductImage(product())" [alt]="'Placeholder para ' + (product()?.name || 'produto')"
+        class="placeholder-image w-full">
+    </div>
+
+    <!-- Tag de Status -->
+    <p-tag [value]="product()?.inStock ? 'Em Estoque' : 'Esgotado'"
+      [severity]="product()?.inStock ? 'success' : 'danger'" class="absolute top-2 left-2">
+    </p-tag>
+  </div>
+
+  <!-- Conteúdo -->
+  <div class="product-content flex flex-col h-full">
+
+    <!-- Nome e Descrição -->
+    <h3 class="product-name text-lg font-medium text-surface-900 mb-2 line-clamp-2">
+      {{ product()?.name }}
+    </h3>
+
+    <p class="product-description text-surface-500 text-sm mb-3 line-clamp-2 flex-1">
+      {{ product()?.description }}
+    </p>
+
+    <!-- Categoria -->
+    <div class="product-category text-xs font-medium text-primary-500 mb-3">
+      {{ product()?.category?.name }}
+    </div>
+
+    <!-- Opções -->
+    <ng-container *ngIf="product()?.options as options">
+      <div class="product-options-preview mb-3" *ngIf="options.length > 0">
+        <div class="option-tags flex flex-wrap gap-1">
+          <p-tag *ngFor="let option of options" [value]="option.name + ': ' + option.values.length + ' opções'"
+            severity="secondary" styleClass="text-xs">
+          </p-tag>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Preço -->
+    <div class="product-price text-2xl font-semibold text-surface-900 mb-4">
+      R$ {{ product()?.price?.toFixed(2) }}
+    </div>
+
+    <!-- Ações -->
+    <div class="product-actions flex gap-2 mt-auto">
+      <button pButton label="Ver Detalhes" icon="pi pi-eye" class="p-button-outlined p-button-sm flex-1"
+        (click)="onViewDetails($event)" [attr.aria-label]="'Ver detalhes de ' + (product()?.name || '')">
+      </button>
+
+      <button pButton icon="pi pi-shopping-cart" class="p-button-sm w-12 h-12 flex items-center justify-center"
+        [disabled]="!product()?.inStock" (click)="onAddToCart($event)"
+        [attr.aria-label]="'Adicionar ' + (product()?.name || '') + ' ao carrinho'">
+      </button>
+    </div>
+  </div>
+</div>

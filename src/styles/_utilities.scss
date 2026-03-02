@@ -1,0 +1,65 @@
+/* =============================================
+   UTILITÁRIOS & COMPONENTES CUSTOM
+   ============================================= */
+.flex-center {
+  @apply flex items-center justify-center;
+}
+
+.flex-between {
+  @apply flex items-center justify-between;
+}
+
+.visually-hidden {
+  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  clip: rect(0, 0, 0, 0);
+}
+
+.custom-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-primary);
+  @apply rounded-lg shadow-sm p-6 transition-colors duration-300;
+}
+
+.custom-input {
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-primary);
+  @apply rounded-md px-3 py-2 transition-colors duration-300;
+  color: var(--text-primary);
+
+  &:focus {
+    @apply outline-none ring-2 border-primary-500;
+    --tw-ring-color: rgba(34, 166, 179, 0.2);
+  }
+}
+
+.btn-primary {
+  @apply bg-primary-500 text-white px-4 py-2 rounded-md hover:bg-primary-600 transition-colors font-semibold duration-200;
+}
+
+.btn-secondary {
+  @apply bg-secondary-500 text-white px-4 py-2 rounded-md hover:bg-secondary-600 transition-colors font-semibold duration-200;
+}
+
+/* =============================================
+   LAYOUT, RESPONSIVIDADE & ACESSIBILIDADE
+   ============================================= */
+.container-custom {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.section-padding {
+  @apply py-12 md:py-16 lg:py-20;
+}
+
+.grid-responsive {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6;
+}
+
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+}
+
+.sr-only {
+  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  clip: rect(0, 0, 0, 0);
+}

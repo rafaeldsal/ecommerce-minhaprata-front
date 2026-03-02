@@ -1,0 +1,390 @@
+.header {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border-primary);
+  position: fixed; // ✅ Mudado para fixed
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-sticky);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+
+  animation: headerSlideDown 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+
+  // ✅ Efeito quando scrollado
+  &.scrolled {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+    .header-content {
+      height: 60px; // ✅ Header mais compacto no scroll
+    }
+
+    .logo {
+      font-size: 1.5rem; // ✅ Logo menor no scroll
+    }
+  }
+
+  &.scrolling-to-top {
+    .logo {
+      opacity: 0.8;
+      transform: scale(0.95);
+    }
+
+    .nav-button.active {
+      background: rgba(34, 166, 179, 0.2);
+    }
+  }
+
+  .header-content {
+    @apply flex items-center justify-between h-16 relative;
+    transition: height 0.3s ease; // ✅ Transição suave
+
+    & > * {
+      opacity: 0;
+      animation: headerElementReveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)
+        forwards;
+    }
+  }
+
+  .mobile-menu-btn {
+    @apply md:hidden flex items-center justify-center w-10 h-10 bg-transparent border-none cursor-pointer rounded-lg transition-all duration-300;
+    animation-delay: 0.1s;
+
+    &:hover {
+      background: var(--color-gray-100);
+      color: var(--color-primary);
+    }
+
+    .icon {
+      @apply w-5 h-5;
+    }
+  }
+
+  .logo {
+    @apply font-bold text-2xl cursor-pointer border-none bg-none transition-all duration-500 whitespace-nowrap px-4 py-2 rounded-xl;
+    background: linear-gradient(
+      135deg,
+      var(--color-primary) 0%,
+      var(--color-secondary) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation-delay: 0.2s;
+    transition: all 0.3s ease; // ✅ Adicionei transition
+
+    &:active {
+      transform: scale(0.95);
+      transition: transform 0.1s ease;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(34, 166, 179, 0.15);
+    }
+  }
+
+  .desktop-nav {
+    @apply hidden md:flex items-center gap-4 lg:gap-6;
+    animation-delay: 0.3s;
+
+    .nav-button {
+      @apply bg-transparent border-none cursor-pointer font-semibold px-3 py-2 transition-all duration-300 flex items-center gap-2 rounded-lg whitespace-nowrap text-sm lg:text-base;
+      color: var(--text-secondary);
+      opacity: 0;
+      animation: slideInFromTop 0.5s ease-out forwards;
+
+      @for $i from 1 through 10 {
+        &:nth-child(#{$i}) {
+          animation-delay: #{0.3 + ($i * 0.1)}s;
+        }
+      }
+
+      &.active {
+        color: var(--color-primary);
+        background: rgba(34, 166, 179, 0.1);
+        transform: translateY(1px);
+        transition: transform 0.1s ease;
+      }
+
+      &.will-scroll {
+        background: rgba(34, 166, 179, 0.2) !important;
+        transform: translateY(1px);
+      }
+
+      &:hover {
+        color: var(--color-primary);
+        background: rgba(34, 166, 179, 0.1);
+      }
+
+      .icon {
+        @apply w-4 h-4;
+      }
+    }
+  }
+
+  .user-actions {
+    @apply flex items-center gap-2;
+    animation-delay: 0.4s;
+
+    .user-action-btn {
+      @apply relative flex items-center justify-center w-10 h-10 bg-transparent border-none cursor-pointer rounded-lg transition-all duration-300;
+      color: var(--text-secondary);
+      opacity: 0;
+      animation: slideInFromTop 0.5s ease-out forwards;
+
+      &:nth-child(1) {
+        animation-delay: 0.5s;
+      }
+      &:nth-child(2) {
+        animation-delay: 0.6s;
+      }
+
+      &:hover {
+        background: var(--color-gray-100);
+        color: var(--color-primary);
+      }
+
+      .icon {
+        @apply w-5 h-5;
+      }
+
+      .cart-badge {
+        @apply absolute -top-1 -right-1 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold;
+        background: var(--color-error);
+        animation: popIn 0.3s ease-out 0.8s forwards;
+        opacity: 0;
+        transform: scale(0);
+      }
+    }
+  }
+
+  .mobile-nav-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden transition-all duration-300;
+    opacity: 0;
+    visibility: hidden;
+
+    &.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-nav {
+      @apply fixed top-0 left-0 w-80 h-full bg-white transform transition-transform duration-300 p-6 flex flex-col shadow-xl;
+      transform: translateX(-100%);
+      background: var(--card-bg);
+    }
+
+    &.active .mobile-nav {
+      transform: translateX(0);
+    }
+
+    .mobile-nav-close {
+      @apply self-end bg-transparent border-none cursor-pointer p-2 mb-4 rounded-lg transition-all duration-300 flex items-center justify-center w-10 h-10;
+      color: var(--text-primary);
+      animation: slideInFromTop 0.4s ease-out 0.1s forwards;
+      opacity: 0;
+
+      &:hover {
+        color: var(--color-primary);
+        background: var(--color-gray-100);
+      }
+    }
+
+    .mobile-nav-content {
+      @apply flex flex-col gap-2;
+
+      .mobile-nav-button {
+        @apply bg-transparent border-none cursor-pointer font-semibold px-4 py-3 transition-all duration-300 flex items-center gap-3 rounded-lg text-left text-lg;
+        color: var(--text-primary);
+        opacity: 0;
+        transform: translateY(-20px);
+        animation: slideInFromTop 0.5s ease-out forwards;
+
+        @for $i from 1 through 10 {
+          &:nth-child(#{$i}) {
+            animation-delay: #{0.2 + ($i * 0.1)}s;
+          }
+        }
+
+        &.active {
+          color: var(--color-primary);
+          background: rgba(34, 166, 179, 0.1);
+        }
+
+        &:hover {
+          color: var(--color-primary);
+          background: rgba(34, 166, 179, 0.1);
+        }
+
+        .icon {
+          @apply w-5 h-5;
+        }
+      }
+    }
+  }
+}
+
+@keyframes headerSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes headerElementReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideInFromTop {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    .header-content {
+      @apply h-14;
+
+      // ✅ Header mais compacto no scroll em mobile
+      .header.scrolled & {
+        height: 50px;
+      }
+    }
+
+    .logo {
+      @apply text-xl;
+
+      // ✅ Logo menor no scroll em mobile
+      .header.scrolled & {
+        font-size: 1.25rem;
+      }
+    }
+
+    .mobile-nav {
+      @apply w-72;
+    }
+  }
+}
+
+// ✅ Ajustes específicos para tablets
+@media (max-width: 768px) and (min-width: 481px) {
+  .header {
+    .header-content {
+      height: 65px;
+
+      .header.scrolled & {
+        height: 55px;
+      }
+    }
+
+    .logo {
+      font-size: 1.75rem;
+
+      .header.scrolled & {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+// ✅ Ajuste para quando o menu mobile está aberto
+.header.menu-open {
+  // Garante que o header fique acima do overlay do menu mobile
+  z-index: var(--z-sticky) + 10;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header {
+    animation: none !important;
+    transition: none !important;
+
+    .header-content > *,
+    .desktop-nav .nav-button,
+    .user-actions .user-action-btn,
+    .mobile-nav-content .mobile-nav-button,
+    .mobile-nav-close,
+    .cart-badge {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    // ✅ Mantém apenas as transições essenciais para acessibilidade
+    &.scrolled {
+      .header-content {
+        height: 60px;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+// ✅ Estados de focus para acessibilidade
+.header {
+  .mobile-menu-btn:focus,
+  .logo:focus,
+  .nav-button:focus,
+  .user-action-btn:focus,
+  .mobile-nav-close:focus,
+  .mobile-nav-button:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+// ✅ Melhorias para alto contraste
+@media (prefers-contrast: high) {
+  .header {
+    backdrop-filter: none;
+    background: var(--header-bg);
+
+    &.scrolled {
+      background: var(--header-bg);
+      border-bottom: 2px solid var(--color-primary);
+    }
+
+    .logo {
+      -webkit-text-fill-color: var(--color-primary);
+      background: none;
+    }
+  }
+}

@@ -1,0 +1,91 @@
+<div class="cart-item">
+  <div class="item-grid">
+
+    <!-- Product Info -->
+    <div class="product-info">
+      <div class="product-image">
+        <img [src]="imgUrl()" [alt]="productName()" class="image"
+          (click)="goToProduct(productId())">
+        <div class="image-overlay">
+          <i class="pi pi-eye"></i>
+        </div>
+      </div>
+
+      <div class="product-details">
+        <h4 class="product-name" (click)="goToProduct(productId())">
+          {{ productName() }}
+        </h4>
+
+        @if (optionsText()) {
+        <p class="product-options">{{ optionsText() }}</p>
+        }
+
+        <div class="product-price-mobile">
+          R$ {{ productPrice() }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Quantity Selector -->
+    <div class="quantity-section">
+      <div class="quantity-selector">
+        <button (click)="onQuantityChange(quantity() - 1)" [disabled]="quantity() <= 1" class="quantity-btn"
+          aria-label="Diminuir quantidade">
+          <i class="pi pi-minus"></i>
+        </button>
+
+        <span class="quantity-display">{{ quantity() }}</span>
+
+        <button (click)="onQuantityChange(quantity() + 1)" [disabled]="quantity() >= quantityInStock()"
+          class="quantity-btn" aria-label="Aumentar quantidade">
+          <i class="pi pi-plus"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Unit Price -->
+    <div class="price-section">
+      <span class="unit-price">R$ {{ productPrice() }}</span>
+    </div>
+
+    <!-- Total Price -->
+    <div class="total-section">
+      <span class="total-price">R$ {{ itemTotal().toFixed(2) }}</span>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-section">
+      <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true" (onClick)="onRemove()"
+        class="remove-btn" [ariaLabel]="'Remover ' + productName()">
+      </p-button>
+    </div>
+
+  </div>
+
+  <!-- Mobile Controls -->
+  <div class="mobile-controls">
+    <div class="mobile-grid">
+      <div class="quantity-selector">
+        <button (click)="onQuantityChange(quantity() - 1)" [disabled]="quantity() <= 1" class="quantity-btn"
+          aria-label="Diminuir quantidade">
+          <i class="pi pi-minus"></i>
+        </button>
+
+        <span class="quantity-display">{{ quantity() }}</span>
+
+        <button (click)="onQuantityChange(quantity() + 1)" [disabled]="quantity() >= quantityInStock()"
+          class="quantity-btn" aria-label="Aumentar quantidade">
+          <i class="pi pi-plus"></i>
+        </button>
+      </div>
+
+      <div class="mobile-total">
+        <span class="total-price">R$ {{ itemTotal().toFixed(2) }}</span>
+      </div>
+
+      <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true" (onClick)="onRemove()"
+        class="remove-btn" [ariaLabel]="'Remover ' + productName()">
+      </p-button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,163 @@
+<div
+  class="login-container min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-100 flex items-center justify-center p-4">
+
+  <!-- Botão Voltar -->
+  <button (click)="goBack()"
+    class="absolute top-6 left-6 flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors duration-200 z-10"
+    aria-label="Voltar para página inicial">
+    <i class="pi pi-arrow-left"></i>
+    <span class="hidden sm:inline">Voltar</span>
+  </button>
+
+  <div class="login-card bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-fadeIn">
+
+    <div class="login-header bg-gradient-to-r from-primary-500 to-primary-600 text-white p-8 text-center">
+      <div class="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+        <i class="pi pi-user-plus text-3xl text-white"></i>
+      </div>
+      <h1 class="text-2xl font-bold mb-2">Criar Conta</h1>
+      <p class="text-primary-100 opacity-90">Junte-se à nossa comunidade</p>
+    </div>
+
+    @if (loading()) {
+    <div class="login-content p-8 space-y-6">
+      <!-- Skeletons similares ao login -->
+      <div class="space-y-2">
+        <p-skeleton width="60px" height="20px"></p-skeleton>
+        <p-skeleton width="100%" height="48px"></p-skeleton>
+      </div>
+      <!-- ... mais skeletons ... -->
+    </div>
+    }
+
+    @if (!loading()) {
+    <div class="login-content p-8">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+        <!-- Nome Completo -->
+        <div class="form-group">
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+            Nome Completo
+          </label>
+          <div class="relative">
+            <i class="pi pi-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10"></i>
+            <input pInputText id="name" type="text" formControlName="name" placeholder="Seu nome completo"
+              [invalid]="isInvalid('name')" class="w-full pl-10" />
+          </div>
+          @if (isInvalid('name')) {
+          <p-message severity="error" size="small" variant="simple" class="mt-2 animate-slideIn">
+            {{ getErrorMessage('name') }}
+          </p-message>
+          }
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+            Email
+          </label>
+          <div class="relative">
+            <i class="pi pi-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10"></i>
+            <input pInputText id="email" type="email" formControlName="email" placeholder="seu@email.com"
+              [invalid]="isInvalid('email')" class="w-full pl-10" />
+          </div>
+          @if (isInvalid('email')) {
+          <p-message severity="error" size="small" variant="simple" class="mt-2 animate-slideIn">
+            {{ getErrorMessage('email') }}
+          </p-message>
+          }
+        </div>
+
+        <!-- Senha -->
+        <div class="form-group">
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+            Senha
+          </label>
+          <div class="relative">
+            <i class="pi pi-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10"></i>
+            <p-password formControlName="password" [toggleMask]="true" [feedback]="true"
+              [invalid]="isInvalid('password')" placeholder="Crie uma senha forte" styleClass="w-full"
+              inputStyleClass="w-full pl-10 pr-20">
+            </p-password>
+          </div>
+          @if (isInvalid('password')) {
+          <p-message severity="error" size="small" variant="simple" class="mt-2 animate-slideIn">
+            {{ getErrorMessage('password') }}
+          </p-message>
+          }
+        </div>
+
+        <!-- Confirmar Senha -->
+        <div class="form-group">
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
+            Confirmar Senha
+          </label>
+          <div class="relative">
+            <i class="pi pi-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10"></i>
+            <p-password formControlName="confirmPassword" [toggleMask]="true" [feedback]="false"
+              [invalid]="isInvalid('confirmPassword')" placeholder="Digite a senha novamente" styleClass="w-full"
+              inputStyleClass="w-full pl-10 pr-20">
+            </p-password>
+          </div>
+          @if (isInvalid('confirmPassword')) {
+          <p-message severity="error" size="small" variant="simple" class="mt-2 animate-slideIn">
+            {{ getErrorMessage('confirmPassword') }}
+          </p-message>
+          }
+        </div>
+
+        <!-- Termos -->
+        <div class="flex items-start">
+          <input type="checkbox" id="acceptTerms" [formControl]="acceptTermsControl"
+            class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 focus:ring-2 cursor-pointer mt-1">
+          <label for="acceptTerms" class="ml-2 text-sm text-gray-600 cursor-pointer select-none">
+            Concordo com os <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">Termos de
+              Serviço</a>
+            e <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">Política de Privacidade</a>
+          </label>
+        </div>
+        @if (isInvalid('acceptTerms')) {
+        <p-message severity="error" size="small" variant="simple" class="mt-2 animate-slideIn">
+          {{ getErrorMessage('acceptTerms') }}
+        </p-message>
+        }
+
+        <button pButton type="submit" [loading]="loading()" [disabled]="registerForm.invalid"
+          class="w-full py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
+          severity="primary">
+          <span pButtonLabel>
+            {{ loading() ? 'Criando conta...' : 'Criar Conta' }}
+          </span>
+        </button>
+
+      </form>
+
+      <p-divider class="my-8">
+        <span class="text-sm text-gray-500 bg-white px-4">ou cadastre-se com</span>
+      </p-divider>
+
+      <div class="social-login flex justify-center mb-6">
+        <app-button-social-login></app-button-social-login>
+      </div>
+
+      <div class="text-center">
+        <p class="text-gray-600">
+          Já tem uma conta?
+          <a routerLink="/auth/login"
+            class="text-primary-600 hover:text-primary-700 font-semibold transition-colors duration-200 ml-1">
+            Fazer login
+          </a>
+        </p>
+      </div>
+
+    </div>
+    }
+
+    <div class="login-footer bg-gray-50 border-t border-gray-200 p-4 text-center">
+      <p class="text-xs text-gray-500">
+        Sua segurança é nossa prioridade. Seus dados estão protegidos.
+      </p>
+    </div>
+
+  </div>
+</div>

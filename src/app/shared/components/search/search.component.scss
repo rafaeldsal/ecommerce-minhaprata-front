@@ -1,0 +1,177 @@
+:host {
+  display: block;
+}
+
+.search-section {
+  background: linear-gradient(
+    135deg,
+    var(--bg-secondary) 0%,
+    var(--bg-tertiary) 100%
+  );
+  padding: 2.5rem 0;
+  border-bottom: 1px solid var(--border-primary);
+
+  animation: searchReveal 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.search-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.search-box {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+:host ::ng-deep {
+  .p-floatlabel {
+    width: 100%;
+
+    .p-inputtext {
+      border: 2px solid var(--color-gray-300) !important;
+      background: var(--input-bg) !important;
+      color: var(--text-primary) !important;
+      transition: all 0.3s ease !important;
+
+      padding-left: 3rem !important;
+      padding-right: 3rem !important;
+      padding-top: 1.25rem !important;
+      padding-bottom: 1.25rem !important;
+
+      animation: inputReveal 0.5s ease-out 0.2s forwards;
+      opacity: 0;
+      transform: translateY(5px);
+
+      &:enabled:hover {
+        border-color: var(--color-primary) !important;
+        transform: translateY(-1px);
+      }
+
+      &:enabled:focus {
+        border-color: var(--color-primary) !important;
+        box-shadow: 0 0 0 4px rgba(34, 166, 179, 0.1) !important;
+        transform: translateY(-2px);
+      }
+    }
+
+    label {
+      color: var(--color-gray-500) !important;
+      left: 3rem !important;
+
+      &.p-label-active {
+        color: var(--color-primary) !important;
+      }
+    }
+  }
+}
+
+.absolute.inset-y-0.left-0 {
+  left: 0.75rem !important;
+  animation: iconFadeIn 0.5s ease-out 0.3s forwards;
+  opacity: 0;
+}
+
+.absolute.inset-y-0.right-0 {
+  right: 0.75rem !important;
+  animation: iconFadeIn 0.5s ease-out 0.4s forwards;
+  opacity: 0;
+}
+
+.search-results,
+.search-no-results {
+  animation: resultsSlideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--card-bg);
+  border: 1px solid var(--border-primary);
+}
+
+.result-item {
+  @apply transition-all duration-300 cursor-pointer;
+  border-color: var(--border-primary);
+
+  &:hover {
+    background: var(--color-gray-50);
+    transform: translateX(5px);
+  }
+}
+
+.product-category {
+  background: rgba(34, 166, 179, 0.1);
+  color: var(--color-primary);
+}
+
+@keyframes searchReveal {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes inputReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes iconFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes resultsSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .search-section {
+    padding: 2rem 0;
+  }
+
+  .search-container {
+    padding: 0 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-section,
+  :host ::ng-deep .p-floatlabel .p-inputtext,
+  .absolute.inset-y-0.left-0,
+  .absolute.inset-y-0.right-0 {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+.product-list-container {
+  margin-top: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+// Para o search component - garante que fique acima
+.search-section {
+  position: relative;
+  z-index: 1000; // Alta prioridade
+}
+
+.search-results,
+.search-no-results {
+  z-index: 1001; // Acima de tudo
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); // Sombra mais forte
+}
+
+// Quando em busca, dá mais destaque
+:host-context(.searching) .product-list-container {
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}

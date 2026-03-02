@@ -1,0 +1,158 @@
+.not-found-container {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(
+    135deg,
+    var(--bg-secondary) 0%,
+    var(--bg-primary) 100%
+  );
+}
+
+.not-found-content {
+  max-width: 500px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  animation: notFoundReveal 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.not-found-illustration {
+  padding: 2rem;
+  border-radius: 50%;
+  background: rgba(34, 166, 179, 0.1);
+  animation: float 3s ease-in-out infinite;
+
+  i {
+    opacity: 0.8;
+  }
+}
+
+.not-found-text {
+  .not-found-title {
+    color: var(--text-primary);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .not-found-description {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+.not-found-actions {
+  width: 100%;
+  max-width: 400px;
+
+  .p-button {
+    flex: 1;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+    }
+  }
+
+  .p-button-outlined {
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+
+    &:hover {
+      background: rgba(34, 166, 179, 0.1);
+    }
+  }
+
+  .p-button-primary {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary) 0%,
+      var(--color-primary-dark) 100%
+    );
+    border: none;
+
+    &:hover {
+      background: linear-gradient(
+        135deg,
+        var(--color-primary-dark) 0%,
+        #04444a 100%
+      );
+      box-shadow: 0 8px 25px rgba(34, 166, 179, 0.3);
+    }
+  }
+}
+
+.not-found-info {
+  p {
+    margin: 0;
+    padding: 1rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: var(--border-radius-base);
+    color: var(--color-error);
+  }
+}
+
+// Animações
+@keyframes notFoundReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+// Responsividade
+@media (max-width: 640px) {
+  .not-found-container {
+    padding: 1rem;
+    min-height: 60vh;
+  }
+
+  .not-found-title {
+    font-size: 2rem !important;
+  }
+
+  .not-found-description {
+    font-size: 1rem !important;
+  }
+
+  .not-found-actions {
+    flex-direction: column;
+  }
+}
+
+// Acessibilidade
+@media (prefers-reduced-motion: reduce) {
+  .not-found-content,
+  .not-found-illustration,
+  .p-button {
+    animation: none !important;
+
+    &:hover {
+      transform: none !important;
+    }
+  }
+}

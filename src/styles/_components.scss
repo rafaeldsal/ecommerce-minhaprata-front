@@ -1,0 +1,30 @@
+.price-text {
+  @apply text-2xl font-bold text-primary-500;
+}
+
+.discount-badge {
+  @apply bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold;
+}
+
+.product-card-hover {
+  @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+}
+
+/* =============================================
+   RESPONSIVIDADE
+   ============================================= */
+@media (max-width: 768px) {
+  :root {
+    --prime-input-padding: 0.75rem 0.875rem;
+    --prime-input-height: 3rem;
+    --prime-button-padding: 0.75rem 1.25rem;
+    --prime-button-height: 3rem;
+  }
+
+  .p-button {
+    &.p-button-lg {
+      padding: 0.875rem 1.5rem !important;
+      min-height: 3.25rem !important;
+    }
+  }
+}

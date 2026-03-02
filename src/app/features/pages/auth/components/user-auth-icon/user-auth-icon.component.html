@@ -1,0 +1,126 @@
+<div class="user-auth-wrapper relative">
+  <!-- Estado de loading/skeleton -->
+  @if (isLoading()) {
+  <div class="skeleton-user-btn">
+    <div class="skeleton-avatar"></div>
+    <div class="skeleton-text"></div>
+    <div class="skeleton-arrow"></div>
+  </div>
+  }
+
+  <!-- Usuário NÃO logado -->
+  @else if (!user()) {
+  <button class="user-action-btn" (click)="navigateToLogin()" aria-label="Fazer login" type="button"
+    [attr.aria-busy]="isNavigating()" [class.loading]="isNavigating()">
+    <i class="pi pi-user icon"></i>
+    @if (isNavigating()) {
+    <p-progressSpinner styleClass="!w-4 !h-4 absolute" strokeWidth="4" animationDuration=".5s">
+    </p-progressSpinner>
+    }
+  </button>
+  }
+
+  <!-- Usuário LOGADO -->
+  @else {
+  <div class="user-menu-trigger">
+    <button class="user-logged-btn" (click)="toggleDropdown()" aria-label="Minha conta" type="button"
+      [attr.aria-expanded]="isDropdownOpen()" [class.dropdown-open]="isDropdownOpen()">
+      <div class="user-avatar">
+        @if (getUserPhoto()) {
+        <img [src]="getUserPhoto()" [alt]="user()?.name || 'Usuário'" class="avatar-image" />
+        } @else {
+        <div class="avatar-placeholder">
+          {{ getInitials(user()?.name || 'U') }}
+        </div>
+        }
+      </div>
+
+      <span class="user-name">
+        {{ getUserFirstName() }}
+      </span>
+
+      <i class="pi pi-chevron-down dropdown-arrow" [class.rotate-180]="isDropdownOpen()"></i>
+    </button>
+
+    <!-- Dropdown Menu DESKTOP -->
+    @if (isDropdownOpen()) {
+    <div class="user-dropdown-menu desktop-dropdown">
+      <!-- Header com informações do usuário -->
+      <div class="dropdown-header">
+        <div class="user-info">
+          <div class="user-avatar small">
+            @if (getUserPhoto()) {
+            <img [src]="getUserPhoto()" [alt]="user()?.name || 'Usuário'" class="avatar-image" />
+            } @else {
+            <div class="avatar-placeholder">
+              {{ getInitials(user()?.name || 'U') }}
+            </div>
+            }
+          </div>
+          <div class="user-details">
+            <span class="user-fullname">{{ user()?.name || 'Usuário' }}</span>
+            <span class="user-email">{{ user()?.email }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown-divider"></div>
+
+      <!-- Menu de navegação -->
+      <nav class="dropdown-nav">
+        <a [routerLink]="['/user/profile']" class="dropdown-item" (click)="closeDropdown()">
+          <i class="pi pi-user"></i>
+          <span>Meu Perfil</span>
+        </a>
+
+        <a [routerLink]="['/user/orders']" class="dropdown-item" (click)="closeDropdown()">
+          <i class="pi pi-shopping-bag"></i>
+          <span>Meus Pedidos</span>
+          @if (pendingOrders() > 0) {
+          <span class="order-badge">{{ pendingOrders() }}</span>
+          }
+        </a>
+
+        <a [routerLink]="['/user/addresses']" class="dropdown-item" (click)="closeDropdown()">
+          <i class="pi pi-map-marker"></i>
+          <span>Meus Endereços</span>
+        </a>
+
+        <!-- Seção Admin (apenas para administradores) -->
+        @if (isAdmin()) {
+        <div class="dropdown-divider"></div>
+
+        <a [routerLink]="['/admin']" class="dropdown-item" (click)="closeDropdown()">
+          <i class="pi pi-shield"></i>
+          <span>Painel Admin</span>
+        </a>
+        }
+
+        <div class="dropdown-divider"></div>
+
+        <a [routerLink]="['/user/settings']" class="dropdown-item" (click)="closeDropdown()">
+          <i class="pi pi-cog"></i>
+          <span>Configurações</span>
+        </a>
+
+        <a [routerLink]="['/user/help']" class="dropdown-item" (click)="closeDropdown()">
+          <i class="pi pi-question-circle"></i>
+          <span>Ajuda & Suporte</span>
+        </a>
+
+        <div class="dropdown-divider"></div>
+
+        <button class="dropdown-item logout-btn" (click)="logout()" [attr.aria-busy]="isLoggingOut()">
+          <i class="pi pi-sign-out"></i>
+          <span>{{ isLoggingOut() ? 'Saindo...' : 'Sair' }}</span>
+          @if (isLoggingOut()) {
+          <p-progressSpinner styleClass="!w-4 !h-4 ml-auto" strokeWidth="4" animationDuration=".5s">
+          </p-progressSpinner>
+          }
+        </button>
+      </nav>
+    </div>
+    }
+  </div>
+  }
+</div>

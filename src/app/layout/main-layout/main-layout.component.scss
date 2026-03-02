@@ -1,0 +1,22 @@
+:host {
+  display: block;
+}
+
+/* No seu main-layout.component.scss ou styles.scss */
+main {
+  margin-top: 80px; /* Altura do header (ajuste conforme necessário) */
+  min-height: calc(100vh - 80px);
+}
+
+/* Para mobile */
+@media (max-width: 768px) {
+  main {
+    margin-top: 70px;
+    min-height: calc(100vh - 70px);
+  }
+
+  /* Quando o header está scrolled (mais compacto) */
+  .header.scrolled + * main {
+    margin-top: 60px;
+  }
+}

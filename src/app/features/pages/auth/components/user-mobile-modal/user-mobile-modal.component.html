@@ -1,0 +1,85 @@
+@if (isOpen) {
+<div class="mobile-modal-overlay" (click)="close()">
+  <div class="mobile-modal-content" (click)="stopPropagation($event)">
+    <!-- Indicador de arraste -->
+    <div class="drag-indicator"></div>
+
+    <!-- Header do Modal Mobile -->
+    <div class="modal-header">
+      <div class="user-info-mobile">
+        <div class="user-avatar medium">
+          @if (getUserPhoto()) {
+          <img [src]="getUserPhoto()" [alt]="user?.name || 'Usuário'" class="avatar-image" />
+          } @else {
+          <div class="avatar-placeholder">
+            {{ getInitials(user?.name || 'U') }}
+          </div>
+          }
+        </div>
+        <div class="user-details-mobile">
+          <span class="user-fullname">{{ user?.name || 'Usuário' }}</span>
+          <span class="user-email">{{ user?.email }}</span>
+        </div>
+      </div>
+      <button class="modal-close-btn" (click)="close()" aria-label="Fechar menu">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    <div class="dropdown-divider"></div>
+
+    <!-- Menu do Modal Mobile -->
+    <nav class="modal-nav">
+      <a class="modal-item" (click)="onNavigateToProfile()">
+        <i class="pi pi-user"></i>
+        <span>Meu Perfil</span>
+        <i class="pi pi-chevron-right"></i>
+      </a>
+
+      <a class="modal-item" (click)="onNavigateToOrders()">
+        <i class="pi pi-shopping-bag"></i>
+        <span>Meus Pedidos</span>
+        <div class="item-badge-container">
+          @if (pendingOrders > 0) {
+          <span class="order-badge">{{ pendingOrders }}</span>
+          }
+          <i class="pi pi-chevron-right"></i>
+        </div>
+      </a>
+
+      <a class="modal-item" (click)="onNavigateToAddresses()">
+        <i class="pi pi-map-marker"></i>
+        <span>Meus Endereços</span>
+        <i class="pi pi-chevron-right"></i>
+      </a>
+
+      <div class="dropdown-divider"></div>
+
+      <a class="modal-item" (click)="onNavigateToSettings()">
+        <i class="pi pi-cog"></i>
+        <span>Configurações</span>
+        <i class="pi pi-chevron-right"></i>
+      </a>
+
+      <a class="modal-item" (click)="onNavigateToHelp()">
+        <i class="pi pi-question-circle"></i>
+        <span>Ajuda & Suporte</span>
+        <i class="pi pi-chevron-right"></i>
+      </a>
+
+      <div class="dropdown-divider"></div>
+
+      <button class="modal-item logout-btn" (click)="onLogout()" [disabled]="isLoggingOut">
+        <i class="pi pi-sign-out"></i>
+        <span>{{ isLoggingOut ? 'Saindo...' : 'Sair' }}</span>
+        @if (isLoggingOut) {
+        <p-progressSpinner styleClass="!w-4 !h-4 ml-auto" strokeWidth="4" animationDuration=".5s">
+        </p-progressSpinner>
+        } @else {
+        <i class="pi pi-chevron-right"></i>
+        }
+      </button>
+    </nav>
+  </div>
+</div>
+}
