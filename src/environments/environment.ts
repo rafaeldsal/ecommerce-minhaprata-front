@@ -3,7 +3,7 @@ export const environment = {
   production: false,
   apiTimeout: 10000,
   // Google OAuth
-  googleClientId: '582265646047-c2r3um1o38tad4bjkbq8qm5nkru4fbln.apps.googleusercontent.com',
+  googleClientId: '',
 
   // URLs de callback
   authCallbackUrls: {
